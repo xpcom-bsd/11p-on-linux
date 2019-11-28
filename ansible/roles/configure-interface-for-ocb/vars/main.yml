@@ -1,0 +1,7 @@
+# You can specify this in your variables. If undefined, we'll try to
+# detect the interface automatically.
+#wireless_interface: wlan0
+
+# G5-SCH1 / 5 880 MHz / CH 176 allows 33 dBm
+wireless_ocb_frequency: 5880
+wireless_ocb_width: 10

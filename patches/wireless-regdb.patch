@@ -1,0 +1,53 @@
+--- db.txt
++++ db.txt
+@@ -26,6 +26,17 @@
+ 	# IEEE 802.11ad (60GHz), channels 1..3
+ 	(57240 - 63720 @ 2160), (0)
+ 
++	# ETSI ITS G5 (EN 302 663, IEEE 802.11p)
++	# (this should normally not go into the world regulatory domain,
++	# but for lab experiments we think this is okay, so the bands
++	# are available in all regulatory domains right away)
++	(5845 - 5865 @ 10), (0), NO-CCK, OCB-ONLY
++	(5865 - 5875 @ 10), (23), NO-CCK, OCB-ONLY
++	(5875 - 5885 @ 10), (33), NO-CCK, OCB-ONLY
++	(5885 - 5895 @ 10), (23), NO-CCK, OCB-ONLY
++	(5895 - 5905 @ 10), (33), NO-CCK, OCB-ONLY
++	(5905 - 5915 @ 10), (0), NO-CCK, OCB-ONLY
++
+ # AD as part of CEPT accepted decisions 2005/513/EC (5GHz RLAN, EN 301 893)
+ # and 2006/771/EC (amended by 2008/432/EC, Short-Range Devices, EN 300 440)
+ #  EU decision 2005/513/EC: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005D0513-20070213
+@@ -1655,3 +1666,9 @@
+ 	(5250 - 5330 @ 80), (20), DFS, AUTO-BW
+ 	(5490 - 5710 @ 160), (27), DFS
+ 
++# This custom domain used for 802.11p jamming experiments violates
++# regulations and is thereby illegal. Use in isolated environments
++# for research only.
++country XX:
++	(5845 - 5915 @ 10), (100), NO-CCK, OCB-ONLY
++
+
+--- dbparse.py
++++ dbparse.py
+@@ -21,6 +21,7 @@ flag_definitions = {
+     # hole at bit 9. FIXME: Where is NO-HT40 defined?
+     'NO-HT40':		1<<10,
+     'AUTO-BW':		1<<11,
++    'OCB-ONLY':		1<<12,
+ }
+ 
+ dfs_regions = {
+
+--- db2fw.py
++++ db2fw.py
+@@ -106,7 +106,7 @@
+     assert power_rule.max_ant_gain == 0
+     flags = 0
+     # convert to new rule flags
+-    assert reg_rule.flags & ~0x899 == 0
++    #assert reg_rule.flags & ~0x899 == 0
+     if reg_rule.flags & 1<<0:
+         flags |= 1<<0
+     if reg_rule.flags & 1<<3:

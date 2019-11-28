@@ -1,0 +1,8 @@
+# You can specify this in your variables. If undefined, we'll try to
+# detect the interface automatically.
+#wireless_interface: wlan0
+
+# You can chose to use your own or our custom regulatory domain "XX",
+# which allows up to 100 dBm (i.e., virtually unlimited) TX power.
+# Set this in your variables, if you want.
+#wireless_regulatory_domain: XX

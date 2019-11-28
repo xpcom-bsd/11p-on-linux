@@ -1,0 +1,38 @@
+- include_tasks: ../../_include/tasks/detect_wireless_interface.yml
+
+- name: as privileged user
+  block:
+
+    - name: put interface up
+      command: "ip link set {{ wireless_interface }} up"
+
+    - name: activate OCB mode
+      command: "iw dev {{ wireless_interface }} set type ocb"
+
+    - name: verify the wireless device is in OCB mode
+      register: iw_dev_result
+      command: iw dev
+      changed_when: false
+      failed_when: "
+        'type outside context of a BSS' not in iw_dev_result.stdout"
+      tags: [verify]
+
+    - name: leave any OCB channel
+      command: "iw dev {{ wireless_interface }} ocb leave"
+
+    - name: "put interface in 802.11p band
+             ({{ wireless_ocb_frequency }}@{{ wireless_ocb_width }} MHz)"
+      command: "iw dev {{ wireless_interface }} ocb join
+                {{ wireless_ocb_frequency }} {{ wireless_ocb_width }}MHz"
+
+    - name: verify the wireless device uses channel
+            "{{ wireless_ocb_frequency }}@{{ wireless_ocb_width }} MHz"
+      register: iw_dev_result
+      command: iw dev
+      changed_when: false
+      failed_when: "
+        '(' ~ wireless_ocb_frequency ~ ' MHz), width: ' ~ wireless_ocb_width ~ ' MHz,'
+        not in iw_dev_result.stdout"
+      tags: [verify]
+
+  become: yes
