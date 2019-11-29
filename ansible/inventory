@@ -1,0 +1,4 @@
+# docs: https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html
+
+# in the simplest case, just list your hosts, one per line, here; e.g.:
+#myhost

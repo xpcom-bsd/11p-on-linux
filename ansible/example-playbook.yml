@@ -1,0 +1,8 @@
+- name: set up hosts for IEEE 802.11p
+  hosts: all
+  roles:
+    - patch-driver-ath
+    - install-user-space-tools
+    - configure-interface-for-ocb
+    - configure-interface-max-power
+    - configure-interface-ip
