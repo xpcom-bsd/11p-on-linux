@@ -159,6 +159,10 @@ if you can get some inspiration on how things should work.
 kernel
 ......
 
+(The corresponding Ansible tasks can be found in
+`ansible/roles/patch-driver-ath/tasks/main.yml
+<ansible/roles/patch-driver-ath/tasks/main.yml>`__)
+
 The mentioned changes in the Linux mainline kernel are implemented from
 version 4.10 upwards (maybe 4.4. works as well, but that is history
 anyway).
@@ -184,6 +188,10 @@ than adapting the patches.
 
 patch (``ath9k``) driver
 ........................
+
+(The corresponding Ansible tasks can be found in
+`ansible/roles/patch-driver-ath/tasks/main.yml
+<ansible/roles/patch-driver-ath/tasks/main.yml>`__)
 
 When using a wireless card without official support for |11p| (i.e.,
 support for 5.9 GHz band and OCB mode), we need to patch its drivers,
@@ -272,6 +280,10 @@ If so, our physical layer setup succeeded.
 updating iw
 ...........
 
+(The corresponding Ansible tasks can be found in
+`ansible/roles/install-user-space-tools/tasks/iw.yml
+<ansible/roles/install-user-space-tools/tasks/iw.yml>`__)
+
 |11p| support is available in ``iw`` 4.0 and later [3]_ [4]_.
 If your system has an older version, you need to update.
 Check your version with
@@ -312,6 +324,13 @@ Verify ``iw`` is aware of the OCB mode:
 
 wireless-regdb, CRDA
 ....................
+
+(The corresponding Ansible tasks can be found in
+`ansible/roles/install-user-space-tools/tasks/wireless-regdb.yml
+<ansible/roles/install-user-space-tools/tasks/wireless-regdb.yml>`__
+and
+`ansible/roles/install-user-space-tools/tasks/crda.yml
+<ansible/roles/install-user-space-tools/tasks/crda.yml>`__)
 
 In order to insert regulatory information about |11p|'s 5.9 GHz band,
 we need to update Linux' ``wireless-regdb``.
@@ -406,8 +425,12 @@ When ``iw`` says: "command failed: Operation not supported (-95)"
 
     sudo systemctl stop NetworkManager.service
 
-create |11p| interface
-----------------------
+put interface in |11p| band and OCB mode
+----------------------------------------
+
+(The corresponding Ansible tasks can be found in
+`ansible/roles/configure-interface-for-ocb/tasks/main.yml
+<ansible/roles/configure-interface-for-ocb/tasks/main.yml>`__)
 
 Now, with a working setup we are now able to send packets over a
 5.9 GHz band of our choice (examples with interface ``wlan0`` – modify
@@ -421,6 +444,10 @@ commands to match your device name, of course).
   sudo iw dev wlan0 ocb join 5880 10MHZ
 
 Assign an IP address per device:
+
+(The corresponding Ansible tasks can be found in
+`ansible/roles/configure-interface-ip/tasks/main.yml
+<ansible/roles/configure-interface-ip/tasks/main.yml>`__)
 
 .. code-block:: shell
 
