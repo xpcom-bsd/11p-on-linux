@@ -1,12 +1,11 @@
-
 .. image:: https://rail2x.berlin/img/logo.svg
   :width: 100em
   :align: right
   :target: https://rail2x.berlin/
 
-================
-802.11p on Linux
-================
+==============
+|11p| on Linux
+==============
 
 This repository contains documentation to make Linux talk
 `Linux IEEE 802.11p <https://standards.ieee.org/findstds/standard/802.11p-2010.html>`__,
