@@ -1,5 +1,5 @@
-# You can specify this in your variables. If undefined, we'll try to
-# detect the interface automatically.
+# You can specify this in your variables. If undefined, an interface
+# which name starts with "wl" will be used – if any.
 #wireless_interface: wlan0
 
 # You probably want to set this in your variables.
