@@ -1,7 +1,5 @@
-This Ansible role prepares the network interfaces to make it aware of
-802.11p.
+This Ansible role configures the IP address of an interface.
 
-This mainly means that a few user land tools are called to apply the
-interface configuration.
+See `vars/main.yml <vars/main.yml>`__ to see what can be configured.
 
 This needs to be re-run after reboots.
