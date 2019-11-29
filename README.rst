@@ -1,3 +1,9 @@
+
+.. image:: https://rail2x.berlin/img/logo.svg
+  :width: 100em
+  :align: right
+  :target: https://rail2x.berlin/
+
 ================
 802.11p on Linux
 ================
@@ -7,11 +13,16 @@ This repository contains documentation to make Linux talk
 an amendment to the popular *IEEE 802.11* standard (aka WiFi) aiming at
 *wireless access in vehicular environments* (WAVE).
 
-The project originated as a
-`research seminar <https://www.dcl.hpi.uni-potsdam.de/meetings/ws1718/>`__
-at the `Operating Systems and Middleware Group <https://osm.hpi.de>`__ of the `Hasso Plattner Institute Potsdam <https://hpi.de/>`__.
+The project originated in the context of the
+`Rail2X project <https://rail2x.berlin/>`__
+at the `Operating Systems and Middleware Group <https://osm.hpi.de>`__
+of the `Hasso Plattner Institute Potsdam <https://hpi.de/>`__.
 
-A `paper <https://scholarspace.manoa.hawaii.edu/bitstream/10125/60190/1/0750.pdf>`__ has been published in the Proceedings of the 52nd `Hawaii International Conference on System Sciences <https://hicss.hawaii.edu/>`__ 2019.
+A
+`paper <https://scholarspace.manoa.hawaii.edu/bitstream/10125/60190/1/0750.pdf>`__
+has been published in the Proceedings of the 52nd
+`Hawaii International Conference on System Sciences <https://hicss.hawaii.edu/>`__
+2019.
 
 PRs welcome.
 
@@ -473,3 +484,4 @@ In alphabetic order (last name):
 .. [4] https://git.kernel.org/cgit/linux/kernel/git/jberg/iw.git/commit/?id=3955e5247806b94261ed2fc6d34c54e6cdee6676
 
 .. |11p| replace:: IEEE 802.11p
+
