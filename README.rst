@@ -8,7 +8,7 @@
 ==============
 
 This repository contains documentation to make Linux talk
-`Linux IEEE 802.11p <https://standards.ieee.org/findstds/standard/802.11p-2010.html>`__,
+`IEEE 802.11p <https://standards.ieee.org/findstds/standard/802.11p-2010.html>`__,
 an amendment to the popular *IEEE 802.11* standard (aka WiFi) aiming at
 *wireless access in vehicular environments* (WAVE).
 
