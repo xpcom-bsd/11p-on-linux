@@ -139,7 +139,7 @@ How to get things going:
    #. make sure you have SSH, sudo and Python working on the remote host
 
       ``$ ssh -t myhost sudo python -V``
-      
+
       You should see the Python version information.
 
    #. add the host to your Ansible inventory
@@ -156,6 +156,9 @@ How to get things going:
    file
 
    ``$ (cd ansible && ansible-playbook --ask-become-pass example-playbook.yml)``
+
+After that, the wireless interfaces of your hosts are set up for
+|11p| and applications can use them.
 
 manual setup
 ------------
@@ -483,4 +486,3 @@ In alphabetic order (last name):
 .. [4] https://git.kernel.org/cgit/linux/kernel/git/jberg/iw.git/commit/?id=3955e5247806b94261ed2fc6d34c54e6cdee6676
 
 .. |11p| replace:: IEEE 802.11p
-
