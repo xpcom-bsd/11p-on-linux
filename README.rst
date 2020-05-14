@@ -252,7 +252,7 @@ Now apply the patches to Linux provided by this repository to the
 
 .. code-block:: shell
 
-  cd linux-source-{ version }/drivers/net/wireless/ath
+  cd linux-source-{ version }
   patch -up0 < ~/my-workdir/11p-on-linux/patches/linux.patch
 
 And build:
