@@ -88,7 +88,11 @@
 - name: unload kernel modules
   command: "rmmod {{ (item | basename | splitext).0  }}"
   ignore_errors: yes
-  with_items: "{{ wireless_modules[::-1] }}"
+  with_flattened:
+    - ath10k_pci
+    - ath10k_usb
+    - ath10k_core
+    - "{{ wireless_modules[::-1] }}"
   become: yes
 
 - name: load kernel modules
