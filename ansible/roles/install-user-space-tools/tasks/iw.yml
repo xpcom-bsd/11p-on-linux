@@ -21,7 +21,7 @@
     name: iw
   become: yes
 
-- name: verify ``iw`` now actually supports OCB
+- name: verify ``iw`` actually supports OCB
   register: iw_result
   command: /sbin/iw
   changed_when: false
