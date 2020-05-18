@@ -1,6 +1,6 @@
 --- db.txt
 +++ db.txt
-@@ -26,6 +26,17 @@
+@@ -26,6 +26,25 @@
  	# IEEE 802.11ad (60GHz), channels 1..3
  	(57240 - 63720 @ 2160), (0)
  
@@ -8,12 +8,20 @@
 +	# (this should normally not go into the world regulatory domain,
 +	# but for lab experiments we think this is okay, so the bands
 +	# are available in all regulatory domains right away)
-+	(5845 - 5865 @ 10), (0), NO-CCK, OCB-ONLY
-+	(5865 - 5875 @ 10), (23), NO-CCK, OCB-ONLY
-+	(5875 - 5885 @ 10), (33), NO-CCK, OCB-ONLY
-+	(5885 - 5895 @ 10), (23), NO-CCK, OCB-ONLY
-+	(5895 - 5905 @ 10), (33), NO-CCK, OCB-ONLY
-+	(5905 - 5915 @ 10), (0), NO-CCK, OCB-ONLY
++	# ITS-G5B G5-SCH4:
++	(5855 - 5865 @ 10), (0)
++	# ITS-G5B G5-SCH3:
++	(5865 - 5875 @ 10), (23)
++	# ITS-G5B G5-SCH1:
++	(5875 - 5885 @ 10), (33)
++	# ITS-G5B G5-SCH2:
++	(5885 - 5895 @ 10), (23)
++	# ITS-G5B G5-CCH:
++	(5895 - 5905 @ 10), (33)
++	# ITS-G5B G5-SCH5:
++	(5905 - 5915 @ 10), (0)
++	# ITS-G5B G5-SCH6:
++	(5915 - 5925 @ 10), (0)
 +
  # AD as part of CEPT accepted decisions 2005/513/EC (5GHz RLAN, EN 301 893)
  # and 2006/771/EC (amended by 2008/432/EC, Short-Range Devices, EN 300 440)
@@ -26,28 +34,5 @@
 +# regulations and is thereby illegal. Use in isolated environments
 +# for research only.
 +country XX:
-+	(5845 - 5915 @ 10), (100), NO-CCK, OCB-ONLY
++	(5855 - 5925 @ 10), (100)
 +
-
---- dbparse.py
-+++ dbparse.py
-@@ -21,6 +21,7 @@ flag_definitions = {
-     # hole at bit 9. FIXME: Where is NO-HT40 defined?
-     'NO-HT40':		1<<10,
-     'AUTO-BW':		1<<11,
-+    'OCB-ONLY':		1<<12,
- }
- 
- dfs_regions = {
-
---- db2fw.py
-+++ db2fw.py
-@@ -106,7 +106,7 @@
-     assert power_rule.max_ant_gain == 0
-     flags = 0
-     # convert to new rule flags
--    assert reg_rule.flags & ~0x899 == 0
-+    #assert reg_rule.flags & ~0x899 == 0
-     if reg_rule.flags & 1<<0:
-         flags |= 1<<0
-     if reg_rule.flags & 1<<3:

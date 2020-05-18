@@ -1,63 +1,11 @@
 # The final step is to sign that new regulatory data with the
 # Central Regulatory Domain Agent.
 
-- name: install dependencies of ``crda``
+- name: install ``crda``
   apt:
     name:
-      - libgcrypt11-dev
-      - python-m2crypto
-      - pkg-config
-      - libnl-3-dev
-      - libnl-genl-3-dev
+      - crda
   become: yes
-
-- name: clone repository of ``crda``
-  git:
-    repo: git://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/crda.git
-    dest: "{{ crda_source_dir }}"
-    force: yes
-
-- name: patch ``crda`` sources
-  patch:
-    basedir: "{{ crda_source_dir }}"
-    src: ../../../../patches/crda.patch
-
-- name: get file names of public keys installed by ``wireless-regdb``
-  register: find_wireless_regdb_pubkeys_result
-  find:
-    paths: /lib/crda/pubkeys
-    file_type: file
-
-- name: create link to ``wireless-regdb``'s public key in ``crda``
-        sources
-  file:
-    path: "{{ crda_source_dir }}/pubkeys/{{ item.path | basename }}"
-    src: "{{ item.path }}"
-    state: link
-    force: yes
-  with_items: "{{ find_wireless_regdb_pubkeys_result.files }}"
-  loop_control:
-    label: "{{ item.path }}"
-
-- name: compile and install ``crda``
-  make:
-    target: "{{ item.target }}"
-    chdir: "{{ crda_source_dir }}"
-    params:
-      REG_BIN: /lib/crda/regulatory.bin
-      PREFIX: /
-
-      # is this the proper way to do it?
-      "--jobs": "{{ ansible_processor_vcpus }}"
-
-  become: "{{ item.become }}"
-  with_items:
-    - target: clean
-      become: no
-    - target: all
-      become: no
-    - target: install
-      become: yes
 
 - name: verify updates to regulatory domain
   register: regdbdump_result
