@@ -88,9 +88,7 @@
     params:
       # is this the proper way to do it?
       "--jobs": "{{ ansible_processor_vcpus }}"
-  with_items:
-    - drivers/net/wireless/ath
-    - drivers/net/wireless/ath/ath9k
+  with_items: "{{ wireless_modules | map('dirname') | unique }}"
 
 - name: unload kernel modules
   command: "rmmod {{ (item | basename | splitext).0  }}"
@@ -103,6 +101,6 @@
   become: yes
 
 - name: load kernel modules
-  command: "insmod {{ item }}"
+  command: "insmod {{ linux_source_dir }}/{{ item }}"
   with_items: "{{ wireless_modules }}"
   become: yes
