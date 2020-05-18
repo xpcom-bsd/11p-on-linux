@@ -1,3 +1,10 @@
+# not strictly required for patching, but let's make sure we can
+# actually use the device then ;)
+- name: "install required firmwares (May 2020: for ath10k devices)"
+  package:
+    name: firmware-atheros
+  become: yes
+
 - name: determine latest kernel version
   block:
 
