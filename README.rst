@@ -466,6 +466,19 @@ Assign an IP address per device:
 
   ip address add 10.1.1.X/24 brd + dev wlan0
 
+Q&A
+===
+
+Why don't you patch the ``OCB-ONLY`` flags in the regulatory database?
+  tl;dr from `a discussion on the Linux kernel mailing list
+  <https://lore.kernel.org/patchwork/patch/469021/#674106>`__:
+  the standard requires only OCB to be used on the frequencies, but it
+  is not a regulatory restriction.
+
+  Apart from the fact, the we do research-only modifications, there is
+  no need to add the additional (and somewhat wrong) regulatory
+  restriction ``OCB-ONLY``.
+
 contributors
 ============
 
