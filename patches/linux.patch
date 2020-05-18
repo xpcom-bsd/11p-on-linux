@@ -93,30 +93,19 @@
      
 --- drivers/net/wireless/ath/ath9k/common-init.c
 +++ drivers/net/wireless/ath/ath9k/common-init.c
-@@ -86,6 +86,26 @@
+@@ -86,6 +86,15 @@
  	CHAN5G(5785, 35), /* Channel 157 */
  	CHAN5G(5805, 36), /* Channel 161 */
  	CHAN5G(5825, 37), /* Channel 165 */
 +
-+	CHAN5G(5850, 38), /* Channel 170 */
-+	/* ITA-G5B */
-+	CHAN5G(5855, 39), /* Channel 171 */
-+	CHAN5G(5860, 40), /* Channel 172 */
-+	CHAN5G(5865, 41), /* Channel 173 */
-+	CHAN5G(5870, 42), /* Channel 174 */
-+	/* ITS-G5A */
-+	CHAN5G(5875, 43), /* Channel 175 */
-+	CHAN5G(5880, 44), /* Channel 176 */
-+	CHAN5G(5885, 45), /* Channel 177 */
-+	CHAN5G(5890, 46), /* Channel 178 */
-+	CHAN5G(5895, 47), /* Channel 179 */
-+	CHAN5G(5900, 48), /* Channel 180 */
-+	CHAN5G(5905, 49), /* Channel 181 */
-+	/* ITS-G5D */
-+	CHAN5G(5910, 50), /* Channel 182 */
-+	CHAN5G(5915, 51), /* Channel 183 */
-+	CHAN5G(5920, 52), /* Channel 184 */
-+	CHAN5G(5925, 53), /* Channel 185 */
++	/* ETSI EN 302 663 */
++	CHAN5G(5860, 38), /* Channel 172, ITS-G5B G5-SCH4 */
++	CHAN5G(5870, 39), /* Channel 174, ITS-G5B G5-SCH3 */
++	CHAN5G(5880, 40), /* Channel 176, ITS-G5A G5-SCH1 */
++	CHAN5G(5890, 41), /* Channel 178, ITS-G5A G5-SCH2 */
++	CHAN5G(5900, 42), /* Channel 180, ITS-G5A G5-CCH */
++	CHAN5G(5910, 43), /* Channel 182, ITS-G5D G5-SCH5 */
++	CHAN5G(5920, 44), /* Channel 184, ITS-G5D G5-SCH6 */
  };
  
  /* Atheros hardware rate code addition for short preamble */
@@ -128,7 +117,7 @@
  #define ATH9K_RSSI_BAD			-128
  
 -#define ATH9K_NUM_CHANNELS	38
-+#define ATH9K_NUM_CHANNELS	54
++#define ATH9K_NUM_CHANNELS	45
  
  /* Register read/write primitives */
  #define REG_WRITE(_ah, _reg, _val) \
