@@ -3,11 +3,14 @@
 - name: as privileged user
   block:
 
-    - name: put interface up
-      command: "ip link set {{ wireless_interface }} up"
+    - name: put interface down
+      command: "ip link set {{ wireless_interface }} down"
 
     - name: activate OCB mode
       command: "iw dev {{ wireless_interface }} set type ocb"
+
+    - name: put interface up
+      command: "ip link set {{ wireless_interface }} up"
 
     - name: verify the wireless device is in OCB mode
       register: iw_dev_result

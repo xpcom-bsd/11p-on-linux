@@ -85,7 +85,7 @@
     basedir: "{{ linux_source_dir }}"
     src: ../../../patches/linux.patch
 
-- name: compile kernel modules
+- name: clean and compile kernel modules
   make:
     target: "{{ item.0 }}"
     chdir: "{{ linux_source_dir }}/{{ item.1 }}"
@@ -98,16 +98,20 @@
     - "{{ wireless_modules | map('dirname') | unique }}"
 
 - name: unload kernel modules
+  register: unload_result
   command: "rmmod {{ (item | basename | splitext).0  }}"
-  ignore_errors: yes
-  with_flattened:
-    - ath10k_pci
-    - ath10k_usb
-    - ath10k_core
-    - "{{ wireless_modules[::-1] }}"
+  with_items: "{{ wireless_modules[::-1] }}"
+  changed_when: unload_result.rc == 0
+  failed_when: unload_result.rc != 0 and
+               "not currently loaded" not in unload_result.stderr
   become: yes
 
 - name: load kernel modules
+  register: load_result
   command: "insmod {{ linux_source_dir }}/{{ item }}"
   with_items: "{{ wireless_modules }}"
   become: yes
+
+- name: re-gather facts
+  setup:
+  when: unload_result.changed or load_result.changed

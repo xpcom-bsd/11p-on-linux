@@ -14,5 +14,4 @@
   # check for the control channel only as a sample
   failed_when: "
     '	(5895.000 - 5905.000 @ 10.000), (33.00), (N/A)'
-    not in regdbdump_result.stdout"
-  tags: [verify]
+    not in regdbdump_result.stdout_lines"

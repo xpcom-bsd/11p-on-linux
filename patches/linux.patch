@@ -121,3 +121,146 @@
  
  /* Register read/write primitives */
  #define REG_WRITE(_ah, _reg, _val) \
+
+# ath10k
+# ======
+
+# todo: once we get this working, check which changes are really
+# required
+
+--- drivers/net/wireless/ath/ath10k/core.h
++++ drivers/net/wireless/ath/ath10k/core.h
+@@ -37,8 +37,8 @@
+ #define WMI_READY_TIMEOUT (5 * HZ)
+ #define ATH10K_FLUSH_TIMEOUT_HZ (5 * HZ)
+ #define ATH10K_CONNECTION_LOSS_HZ (3 * HZ)
+-#define ATH10K_NUM_CHANS 41
+-#define ATH10K_MAX_5G_CHAN 173
++#define ATH10K_NUM_CHANS 47
++#define ATH10K_MAX_5G_CHAN 184
+ 
+ /* Antenna noise floor */
+ #define ATH10K_DEFAULT_NOISE_FLOOR -95
+
+--- drivers/net/wireless/ath/ath10k/mac.c
++++ drivers/net/wireless/ath/ath10k/mac.c
+@@ -5276,6 +5276,7 @@
+ 					(ar, WMI_VDEV_SUBTYPE_P2P_CLIENT);
+ 		break;
+ 	case NL80211_IFTYPE_ADHOC:
++	case NL80211_IFTYPE_OCB:
+ 		arvif->vdev_type = WMI_VDEV_TYPE_IBSS;
+ 		break;
+ 	case NL80211_IFTYPE_MESH_POINT:
+@@ -5331,6 +5332,12 @@
+ 	 */
+ 	if (vif->type == NL80211_IFTYPE_ADHOC ||
+ 	    vif->type == NL80211_IFTYPE_MESH_POINT ||
++
++	    // We reuse the ad hoc mode for OCB, so we better also allocate
++	    // this buffer. However, in OCB mode, we should never rx or tx
++	    // beacons.
++	    vif->type == NL80211_IFTYPE_OCB ||
++
+ 	    vif->type == NL80211_IFTYPE_AP) {
+ 		arvif->beacon_buf = dma_alloc_coherent(ar->dev,
+ 						       IEEE80211_MAX_FRAME_LEN,
+@@ -5761,7 +5768,7 @@
+ 
+ 	mutex_lock(&ar->conf_mutex);
+ 
+-	if (changed & BSS_CHANGED_IBSS)
++	if (changed & (BSS_CHANGED_IBSS | BSS_CHANGED_OCB)) /* ? */
+ 		ath10k_control_ibss(arvif, info, vif->addr);
+ 
+ 	if (changed & BSS_CHANGED_BEACON_INT) {
+@@ -6745,7 +6752,11 @@
+ 		   new_state == IEEE80211_STA_ASSOC &&
+ 		   (vif->type == NL80211_IFTYPE_AP ||
+ 		    vif->type == NL80211_IFTYPE_MESH_POINT ||
+-		    vif->type == NL80211_IFTYPE_ADHOC)) {
++		    vif->type == NL80211_IFTYPE_ADHOC ||
++
++		    // We reuse the ad hoc mode for OCB, so we better play along
++		    // here as well. However, in OCB mode, there is no association.
++		    vif->type == NL80211_IFTYPE_OCB)) {
+ 		/*
+ 		 * New association.
+ 		 */
+@@ -6781,7 +6792,11 @@
+ 		    new_state == IEEE80211_STA_AUTH &&
+ 		    (vif->type == NL80211_IFTYPE_AP ||
+ 		     vif->type == NL80211_IFTYPE_MESH_POINT ||
+-		     vif->type == NL80211_IFTYPE_ADHOC)) {
++		     vif->type == NL80211_IFTYPE_ADHOC ||
++
++		     // We reuse the ad hoc mode for OCB, so we better play along
++		     // here as well. However, in OCB mode, there is no association.
++		     vif->type == NL80211_IFTYPE_OCB)) {
+ 		/*
+ 		 * Disassociation.
+ 		 */
+@@ -8389,7 +8404,16 @@
+ 	CHAN5G(161, 5805, 0),
+ 	CHAN5G(165, 5825, 0),
+ 	CHAN5G(169, 5845, 0),
+-	CHAN5G(173, 5865, 0),
++
++
++	/* ETSI EN 302 663 */
++	CHAN5G(172, 5860, 0), /* Channel 172, ITS-G5B G5-SCH4 */
++	CHAN5G(174, 5870, 0), /* Channel 174, ITS-G5B G5-SCH3 */
++	CHAN5G(176, 5880, 0), /* Channel 176, ITS-G5A G5-SCH1 */
++	CHAN5G(178, 5890, 0), /* Channel 178, ITS-G5A G5-SCH2 */
++	CHAN5G(180, 5900, 0), /* Channel 180, ITS-G5A G5-CCH */
++	CHAN5G(182, 5910, 0), /* Channel 182, ITS-G5D G5-SCH5 */
++	CHAN5G(184, 5920, 0), /* Channel 184, ITS-G5D G5-SCH6 */
+ 	/* If you add more, you may need to change ATH10K_MAX_5G_CHAN */
+ 	/* And you will definitely need to change ATH10K_NUM_CHANS in core.h */
+ };
+@@ -8501,7 +8525,8 @@
+ 			 BIT(NL80211_IFTYPE_MESH_POINT) |
+ #endif
+ 			 BIT(NL80211_IFTYPE_P2P_CLIENT) |
+-			 BIT(NL80211_IFTYPE_P2P_GO),
++			 BIT(NL80211_IFTYPE_P2P_GO) |
++			 BIT(NL80211_IFTYPE_OCB),
+ 	},
+ 	{
+ 		.max = 1,
+@@ -8541,6 +8566,10 @@
+ 		.max = 1,
+ 		.types = BIT(NL80211_IFTYPE_ADHOC),
+ 	},
++	{
++		.max = 1,
++		.types = BIT(NL80211_IFTYPE_OCB),
++	},
+ };
+ 
+ /* FIXME: This is not thouroughly tested. These combinations may over- or
+@@ -8851,7 +8880,11 @@
+ 	ar->hw->wiphy->interface_modes =
+ 		BIT(NL80211_IFTYPE_STATION) |
+ 		BIT(NL80211_IFTYPE_AP) |
+-		BIT(NL80211_IFTYPE_MESH_POINT);
++		BIT(NL80211_IFTYPE_MESH_POINT) |
++		BIT(NL80211_IFTYPE_OCB);
++
++	// support 10 MHz channel width for OCB
++	ar->hw->wiphy->flags |= NL80211_CHAN_WIDTH_10;
+
+ 	ar->hw->wiphy->available_antennas_rx = ar->cfg_rx_chainmask;
+ 	ar->hw->wiphy->available_antennas_tx = ar->cfg_tx_chainmask;
+--- drivers/net/wireless/ath/ath10k/Makefile
++++ drivers/net/wireless/ath/ath10k/Makefile
+@@ -42,3 +42,9 @@
+ 
+ # for tracing framework to find trace.h
+ CFLAGS_trace.o := -I$(src)
++
++all:
++	$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(shell pwd) modules
++
++clean:
++	$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(shell pwd) clean

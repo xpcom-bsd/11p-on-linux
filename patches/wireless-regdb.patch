@@ -1,13 +1,15 @@
 --- db.txt
 +++ db.txt
-@@ -26,6 +26,25 @@
+@@ -26,6 +26,27 @@
  	# IEEE 802.11ad (60GHz), channels 1..3
  	(57240 - 63720 @ 2160), (0)
  
 +	# ETSI ITS G5 (EN 302 663, IEEE 802.11p)
-+	# (this should normally not go into the world regulatory domain,
++	# (This should normally not go into the world regulatory domain,
 +	# but for lab experiments we think this is okay, so the bands
-+	# are available in all regulatory domains right away)
++	# are available in all regulatory domains right away.)
++	# Additionally, some ath10k cards are fixed to the world
++	# regulatory domain (00).
 +	# ITS-G5B G5-SCH4:
 +	(5855 - 5865 @ 10), (0)
 +	# ITS-G5B G5-SCH3:
