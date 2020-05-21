@@ -83,12 +83,15 @@
 
 - name: compile kernel modules
   make:
-    target: all
-    chdir: "{{ linux_source_dir }}/{{ item }}"
+    target: "{{ item.0 }}"
+    chdir: "{{ linux_source_dir }}/{{ item.1 }}"
     params:
       # is this the proper way to do it?
       "--jobs": "{{ ansible_processor_vcpus }}"
-  with_items: "{{ wireless_modules | map('dirname') | unique }}"
+  with_nested:
+    - - clean
+      - all
+    - "{{ wireless_modules | map('dirname') | unique }}"
 
 - name: unload kernel modules
   command: "rmmod {{ (item | basename | splitext).0  }}"
