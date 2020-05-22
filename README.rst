@@ -72,7 +72,8 @@ Additionally, we note the following
     - ath10k
     - work (sometimes) in progress
     - see `branch ath10k
-      <https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux/-/tree/ath10k>`__,
+      <https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux/-/tree/ath10k>`__
+      (`compare <https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux/-/compare/master...ath10k>`__),
       status: device accepts OCB mode but firmware crashes when switching to
       10 MHz channel width
   * - ?
