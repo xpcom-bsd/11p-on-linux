@@ -1,4 +1,4 @@
-# The final step is to sign that new regulatory data with the
+# The final step is to verify the new regulatory data with the
 # Central Regulatory Domain Agent.
 
 - name: install ``crda``
