@@ -70,8 +70,11 @@ Additionally, we note the following
     - QCA9880
     - 28 dBm
     - ath10k
-    - pending
-    - waiting for delivery, then need to adapt driver patches
+    - work (sometimes) in progress
+    - see `branch ath10k
+      <https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux/-/tree/ath10k>`__,
+      status: device accepts OCB mode but firmware crashes when switching to
+      10 MHz channel width
   * - ?
     - `QCA6564AU <https://www.qualcomm.com/products/qca6564au>`__
     - ?
