@@ -44,10 +44,14 @@
       - "linux-image-{{ kernel_arch }}={{ kernel_package_version }}"
       - "linux-headers-{{ kernel_arch }}={{ kernel_package_version }}"
       - "linux-source={{ kernel_package_version }}"
+
+      # https://wiki.debian.org/BuildADebianKernelPackage
       - build-essential
-      - kernel-package
+      - libncurses5-dev
+
       - libssl-dev
       - needrestart
+
   become: yes
 
 - name: check if we are running the latest kernel installed
