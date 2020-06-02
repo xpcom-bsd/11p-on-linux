@@ -9,6 +9,7 @@
 
     - name: deactivate power save
       command: "iw dev {{ wireless_interface }} set power_save off"
+      ignore_errors: true
 
     - name: set maximum TX power
       register: set_txpower_result
