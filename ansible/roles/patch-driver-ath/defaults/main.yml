@@ -11,6 +11,7 @@ linux_source_dir: "~{{
 # used to load the modules (and unload in reverse order):
 wireless_modules:
   - "drivers/net/wireless/ath/ath.ko"
+
   - "drivers/net/wireless/ath/ath9k/ath9k_hw.ko"
   - "drivers/net/wireless/ath/ath9k/ath9k_common.ko"
   - "drivers/net/wireless/ath/ath9k/ath9k_htc.ko"
