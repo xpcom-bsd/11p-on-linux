@@ -36,3 +36,20 @@
 +country XX:
 +	(5855 - 5925 @ 10), (100)
 +
+
+--- Makefile
++++ Makefile
+@@ -57,11 +57,11 @@ mrproper: clean maintainer-clean
+ 
+ regulatory.bin: db.txt $(REGDB_PRIVKEY) $(REGDB_PUBKEY)
+ 	@echo Generating $@ digitally signed by $(REGDB_AUTHOR)...
+-	./db2bin.py regulatory.bin db.txt $(REGDB_PRIVKEY)
++	python3 ./db2bin.py regulatory.bin db.txt $(REGDB_PRIVKEY)
+ 
+ regulatory.db: db.txt db2fw.py
+ 	@echo "Generating $@"
+-	./db2fw.py regulatory.db db.txt
++	python3 ./db2fw.py regulatory.db db.txt
+ 
+ regulatory.db.p7s: regulatory.db $(REGDB_PRIVKEY) $(REGDB_PUBCERT)
+ 	@echo "Signing regulatory.db (by $(REGDB_AUTHOR))..."

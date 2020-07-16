@@ -5,8 +5,11 @@
   apt:
     name:
       # required by ``wireless-regdb``'s helper script ``db2fw.py``:
-      - python-m2crypto
-      - python-future
+      # (we use Python 3 so this works on new OSs, where Python 2 is
+      # deprecated, as well)
+      - python3
+      - python3-m2crypto
+      - python3-future
   become: yes
 
 - name: clone repository of ``wireless-regdb``
