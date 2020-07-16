@@ -65,7 +65,7 @@ Additionally, we note the following
     - 27 dBm
     - ath9k
     - pending
-    - waiting for delivery, should work out of the box with patches
+    - works
   * - `MikroTik R11e-5HacT <https://mikrotik.com/product/R11e-5HacT>`__
     - QCA9880
     - 28 dBm
