@@ -64,8 +64,8 @@ Additionally, we note the following
     - AR9580
     - 27 dBm
     - ath9k
-    - pending
-    - works
+    - ✓
+    - according to ``iw``, TX power can't be set to > 26 dBm
   * - `MikroTik R11e-5HacT <https://mikrotik.com/product/R11e-5HacT>`__
     - QCA9880
     - 28 dBm
