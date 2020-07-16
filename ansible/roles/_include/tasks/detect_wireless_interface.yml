@@ -2,7 +2,7 @@
   register: wireless_interface_autodetected
   set_fact:
     wireless_interface: "{{ item }}"
-  when: item.startswith("wl")
+  when: wireless_interface | default('') == '' and item.startswith("wl")
   with_items: "{{ ansible_interfaces }}"
 
 - name: fail if we could not detect the wireless interface
@@ -10,14 +10,11 @@
     msg: >
       Could not detect wireless interface. Consider setting
       the variable ``wireless_interface`` explicitly.
-  when: wireless_interface_autodetected is defined and not
-        wireless_interface is defined
+  when: wireless_interface | default('') == ''
 
-- name: warn if wireless CIDR is not set explicitly
+- name: inform which interface we detected
   debug:
     msg: >
       Variable ``wireless_interface`` not set explicitly in configuration.
-      Your probably want to do this.
-      Using automatically detected interface "{{ wireless_interface }}"
-      meanwhile.
+      Using automatically detected interface "{{ wireless_interface }}".
   when: wireless_interface_autodetected is defined
