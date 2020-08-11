@@ -114,6 +114,13 @@
     - "{{ wireless_modules[::-1] }}"
   become: yes
 
+- name: count physical wireless devices
+  register: iw_phy_count_result_pre
+  shell: iw dev | grep -c '^phy'
+  changed_when: false
+  failed_when: iw_phy_count_result_pre.rc not in [0, 1]
+  become: yes
+
 - name: load kernel modules
   command: "insmod {{ linux_source_dir }}/{{ item }}"
   with_items: "{{ wireless_modules }}"
