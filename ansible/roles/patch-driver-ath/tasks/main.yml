@@ -106,10 +106,28 @@
                "not currently loaded" not in unload_result.stderr
   become: yes
 
+- name: count physical wireless devices
+  register: iw_phy_count_result_pre
+  shell: iw dev | grep -c '^phy'
+  changed_when: false
+  failed_when: iw_phy_count_result_pre.rc not in [0, 1]
+  become: yes
+
 - name: load kernel modules
   register: load_result
   command: "insmod {{ linux_source_dir }}/{{ item }}"
   with_items: "{{ wireless_modules }}"
+  become: yes
+
+- name: wait until new physical wireless devices has been detected
+  register: iw_phy_count_result_post
+  shell: iw dev | grep -c '^phy'
+  changed_when: false
+  failed_when: iw_phy_count_result_post.rc not in [0, 1]
+  until: >
+    iw_phy_count_result_pre.stdout != iw_phy_count_result_post.stdout
+  delay: 1
+  retries: 10
   become: yes
 
 - name: re-gather facts
