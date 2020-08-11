@@ -2,7 +2,7 @@
 # which name starts with "wl" will be used – if any.
 #wireless_interface: wlan0
 
-# You can chose to use your own or our custom regulatory domain "XX",
+# We default to our custom regulatory domain "XX",
 # which allows up to 100 dBm (i.e., virtually unlimited) TX power.
-# Set this in your variables, if you want.
-#wireless_regulatory_domain: XX
+# Overwrite this in your variables, if you want.
+wireless_regulatory_domain: XX

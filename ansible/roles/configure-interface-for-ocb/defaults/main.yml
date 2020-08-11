@@ -2,6 +2,6 @@
 # which name starts with "wl" will be used – if any.
 #wireless_interface: wlan0
 
-# G5-SCH1 / 5 880 MHz / CH 176 allows 33 dBm
+# G5-CCH / 5 900 MHz / CH 180 allows 33 dBm
 wireless_ocb_frequency: 5900
-wireless_ocb_width: 10
+wireless_ocb_width: 20
