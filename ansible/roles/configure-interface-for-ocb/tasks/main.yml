@@ -43,7 +43,7 @@
       command: iw dev
       changed_when: false
       failed_when: "
-        '(' ~ wireless_ocb_frequency ~ ' MHz), width: ' ~ wireless_ocb_width ~ ' MHz,'
+        '(' ~ wireless_ocb_frequency ~ ' MHz), width: ' ~ wireless_ocb_width ~ ' MHz'
         not in iw_dev_result.stdout"
       tags: [verify]
 
