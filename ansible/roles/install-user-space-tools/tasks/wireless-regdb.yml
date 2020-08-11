@@ -28,7 +28,6 @@
     target: "{{ item.target }}"
     chdir: "{{ wireless_regdb_source_dir }}"
     params:
-      PREFIX: /
       # is this the proper way to do it?
       "--jobs": "{{ ansible_processor_vcpus }}"
   become: "{{ item.become }}"
