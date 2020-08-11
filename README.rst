@@ -74,8 +74,8 @@ Additionally, we note the following
     - see `branch ath10k
       <https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux/-/tree/ath10k>`__
       (`compare <https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux/-/compare/master...ath10k>`__),
-      status: device accepts OCB mode but firmware crashes when switching to
-      10 MHz channel width
+      status: OCB mode, channel frequency and width accepted from
+      driver, but no connectivity
   * - ?
     - `QCA6564AU <https://www.qualcomm.com/products/qca6564au>`__
     - ?
