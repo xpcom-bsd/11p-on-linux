@@ -142,9 +142,101 @@
  /* Antenna noise floor */
  #define ATH10K_DEFAULT_NOISE_FLOOR -95
 
+--- drivers/net/wireless/ath/ath10k/Makefile
++++ drivers/net/wireless/ath/ath10k/Makefile
+@@ -42,3 +42,9 @@
+ 
+ # for tracing framework to find trace.h
+ CFLAGS_trace.o := -I$(src)
++
++all:
++	$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(shell pwd) modules
++
++clean:
++	$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(shell pwd) clean
+
+--- drivers/net/wireless/ath/ath10k/wmi.c
++++ drivers/net/wireless/ath/ath10k/wmi.c
+@@ -1713,6 +1713,10 @@
+ 		flags |= WMI_CHAN_FLAG_HT40_PLUS;
+ 	if (arg->chan_radar)
+ 		flags |= WMI_CHAN_FLAG_DFS;
++	if (arg->rate_half)
++		flags |= WMI_CHAN_FLAG_HALF;
++	if (arg->rate_quarter)
++		flags |= WMI_CHAN_FLAG_QUARTER;
+ 
+ 	ch->mhz = __cpu_to_le32(arg->freq);
+ 	ch->band_center_freq1 = __cpu_to_le32(arg->band_center_freq1);
+--- drivers/net/wireless/ath/ath10k/wmi.h
++++ drivers/net/wireless/ath/ath10k/wmi.h
+@@ -2070,6 +2070,8 @@
+ 	bool allow_vht;
+ 	bool ht40plus;
+ 	bool chan_radar;
++	bool rate_half;
++	bool rate_quarter;
+ 	/* note: power unit is 0.5 dBm */
+ 	u32 min_power;
+ 	u32 max_power;
+@@ -2091,6 +2093,8 @@
+ #define WMI_CHAN_FLAG_DFS            (1 << 10)
+ #define WMI_CHAN_FLAG_ALLOW_HT       (1 << 11)
+ #define WMI_CHAN_FLAG_ALLOW_VHT      (1 << 12)
++#define WMI_CHAN_FLAG_QUARTER        (1 << 13)
++#define WMI_CHAN_FLAG_HALF           (1 << 14)
+ 
+ /* Indicate reason for channel switch */
+ #define WMI_CHANNEL_CHANGE_CAUSE_CSA (1 << 13)
 --- drivers/net/wireless/ath/ath10k/mac.c
 +++ drivers/net/wireless/ath/ath10k/mac.c
-@@ -5276,6 +5276,7 @@
+@@ -580,6 +580,8 @@
+ 	case NL80211_BAND_5GHZ:
+ 		switch (chandef->width) {
+ 		case NL80211_CHAN_WIDTH_20_NOHT:
++		case NL80211_CHAN_WIDTH_5:
++		case NL80211_CHAN_WIDTH_10:
+ 			phymode = MODE_11A;
+ 			break;
+ 		case NL80211_CHAN_WIDTH_20:
+@@ -597,10 +599,6 @@
+ 		case NL80211_CHAN_WIDTH_80P80:
+ 			phymode = MODE_11AC_VHT80_80;
+ 			break;
+-		case NL80211_CHAN_WIDTH_5:
+-		case NL80211_CHAN_WIDTH_10:
+-			phymode = MODE_UNKNOWN;
+-			break;
+ 		}
+ 		break;
+ 	default:
+@@ -1039,6 +1037,12 @@
+ 	arg.channel.chan_radar =
+ 			!!(channel->flags & IEEE80211_CHAN_RADAR);
+ 
++	if (chandef->width == NL80211_CHAN_WIDTH_10) {
++		arg.channel.rate_half = 1;
++	} else if (chandef->width == NL80211_CHAN_WIDTH_5) {
++		arg.channel.rate_quarter = 1;
++	}
++
+ 	arg.channel.min_power = 0;
+ 	arg.channel.max_power = channel->max_power * 2;
+ 	arg.channel.max_reg_power = channel->max_reg_power * 2;
+@@ -1490,6 +1494,12 @@
+ 	arg.channel.max_reg_power = chandef->chan->max_reg_power * 2;
+ 	arg.channel.max_antenna_gain = chandef->chan->max_antenna_gain * 2;
+ 
++	if (chandef->width == NL80211_CHAN_WIDTH_10) {
++		arg.channel.rate_half = 1;
++	} else if (chandef->width == NL80211_CHAN_WIDTH_5) {
++		arg.channel.rate_quarter = 1;
++	}
++
+ 	if (arvif->vdev_type == WMI_VDEV_TYPE_AP) {
+ 		arg.ssid = arvif->u.ap.ssid;
+ 		arg.ssid_len = arvif->u.ap.ssid_len;
+@@ -5290,6 +5300,7 @@
  					(ar, WMI_VDEV_SUBTYPE_P2P_CLIENT);
  		break;
  	case NL80211_IFTYPE_ADHOC:
@@ -152,7 +244,7 @@
  		arvif->vdev_type = WMI_VDEV_TYPE_IBSS;
  		break;
  	case NL80211_IFTYPE_MESH_POINT:
-@@ -5331,6 +5332,12 @@
+@@ -5345,6 +5356,12 @@
  	 */
  	if (vif->type == NL80211_IFTYPE_ADHOC ||
  	    vif->type == NL80211_IFTYPE_MESH_POINT ||
@@ -165,7 +257,7 @@
  	    vif->type == NL80211_IFTYPE_AP) {
  		arvif->beacon_buf = dma_alloc_coherent(ar->dev,
  						       IEEE80211_MAX_FRAME_LEN,
-@@ -5761,7 +5768,7 @@
+@@ -5775,7 +5792,7 @@
  
  	mutex_lock(&ar->conf_mutex);
  
@@ -174,7 +266,7 @@
  		ath10k_control_ibss(arvif, info, vif->addr);
  
  	if (changed & BSS_CHANGED_BEACON_INT) {
-@@ -6745,7 +6752,11 @@
+@@ -6765,7 +6782,11 @@
  		   new_state == IEEE80211_STA_ASSOC &&
  		   (vif->type == NL80211_IFTYPE_AP ||
  		    vif->type == NL80211_IFTYPE_MESH_POINT ||
@@ -187,7 +279,7 @@
  		/*
  		 * New association.
  		 */
-@@ -6781,7 +6792,11 @@
+@@ -6801,7 +6822,11 @@
  		    new_state == IEEE80211_STA_AUTH &&
  		    (vif->type == NL80211_IFTYPE_AP ||
  		     vif->type == NL80211_IFTYPE_MESH_POINT ||
@@ -200,7 +292,7 @@
  		/*
  		 * Disassociation.
  		 */
-@@ -8389,7 +8404,16 @@
+@@ -8410,7 +8435,16 @@
  	CHAN5G(161, 5805, 0),
  	CHAN5G(165, 5825, 0),
  	CHAN5G(169, 5845, 0),
@@ -218,7 +310,7 @@
  	/* If you add more, you may need to change ATH10K_MAX_5G_CHAN */
  	/* And you will definitely need to change ATH10K_NUM_CHANS in core.h */
  };
-@@ -8501,7 +8525,8 @@
+@@ -8522,7 +8556,8 @@
  			 BIT(NL80211_IFTYPE_MESH_POINT) |
  #endif
  			 BIT(NL80211_IFTYPE_P2P_CLIENT) |
@@ -228,7 +320,7 @@
  	},
  	{
  		.max = 1,
-@@ -8541,6 +8566,10 @@
+@@ -8562,6 +8597,10 @@
  		.max = 1,
  		.types = BIT(NL80211_IFTYPE_ADHOC),
  	},
@@ -239,7 +331,7 @@
  };
  
  /* FIXME: This is not thouroughly tested. These combinations may over- or
-@@ -8851,7 +8880,11 @@
+@@ -8872,7 +8911,11 @@
  	ar->hw->wiphy->interface_modes =
  		BIT(NL80211_IFTYPE_STATION) |
  		BIT(NL80211_IFTYPE_AP) |
@@ -252,15 +344,11 @@
 
  	ar->hw->wiphy->available_antennas_rx = ar->cfg_rx_chainmask;
  	ar->hw->wiphy->available_antennas_tx = ar->cfg_tx_chainmask;
---- drivers/net/wireless/ath/ath10k/Makefile
-+++ drivers/net/wireless/ath/ath10k/Makefile
-@@ -42,3 +42,9 @@
+@@ -8965,6 +9008,7 @@
  
- # for tracing framework to find trace.h
- CFLAGS_trace.o := -I$(src)
-+
-+all:
-+	$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(shell pwd) modules
-+
-+clean:
-+	$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(shell pwd) clean
+ 	ar->hw->wiphy->flags |= WIPHY_FLAG_HAS_REMAIN_ON_CHANNEL;
+ 	ar->hw->wiphy->flags |= WIPHY_FLAG_HAS_CHANNEL_SWITCH;
++	ar->hw->wiphy->flags |= WIPHY_FLAG_SUPPORTS_5_10_MHZ;
+ 	ar->hw->wiphy->max_remain_on_channel_duration = 5000;
+ 
+ 	ar->hw->wiphy->flags |= WIPHY_FLAG_AP_UAPSD;
