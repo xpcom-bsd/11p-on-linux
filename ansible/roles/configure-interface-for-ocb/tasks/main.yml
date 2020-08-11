@@ -6,6 +6,15 @@
     - name: put interface up
       command: "ip link set {{ wireless_interface }} up"
 
+    - name: set regulatory domain (switch at least once to apply
+            potential changes from regdb)
+      command: "iw reg set {{ item }}"
+      when: wireless_regulatory_domain is defined
+      with_items:
+        - "00"
+        - "XX"
+        - "{{ wireless_regulatory_domain }}"
+
     - name: activate OCB mode
       command: "iw dev {{ wireless_interface }} set type ocb"
 
