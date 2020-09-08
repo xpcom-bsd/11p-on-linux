@@ -63,11 +63,13 @@
   # rights to execute:
   command: /usr/sbin/needrestart -kb
   changed_when: false
+  tags: verify
 
 - name: reboot if we are not running the latest kernel installed
   reboot:
   when: "'NEEDRESTART-KSTA: 1' not in needrestart_result.stdout_lines"
   become: yes
+  tags: verify
 
 - name: create directory to extract the kernel sources to
   file:
@@ -121,7 +123,7 @@
   with_items: "{{ wireless_modules }}"
   become: yes
 
-- name: wait until new physical wireless devices has been detected
+- name: wait until new physical wireless devices have been detected
   register: iw_phy_count_result_post
   shell: iw dev | grep -c '^phy'
   changed_when: false

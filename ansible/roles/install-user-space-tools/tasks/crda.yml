@@ -16,3 +16,4 @@
   failed_when: "
     '	(5895.000 - 5905.000 @ 10.000), (33.00), (N/A)'
     not in regdbdump_result.stdout_lines"
+  tags: verify
