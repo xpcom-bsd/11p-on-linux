@@ -6,6 +6,7 @@
     name:
       - crda
   become: yes
+  tags: online
 
 - name: verify updates to regulatory domain
   register: regdbdump_result

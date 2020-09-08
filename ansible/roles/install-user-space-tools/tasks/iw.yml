@@ -20,6 +20,7 @@
   apt:
     name: iw
   become: yes
+  tags: online
 
 - name: verify ``iw`` actually supports OCB
   register: iw_result

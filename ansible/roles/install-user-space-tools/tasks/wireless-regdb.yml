@@ -11,12 +11,14 @@
       - python3-m2crypto
       - python3-future
   become: yes
+  tags: online
 
 - name: clone repository of ``wireless-regdb``
   git:
     repo: git://git.kernel.org/pub/scm/linux/kernel/git/sforshee/wireless-regdb.git
     dest: "{{ wireless_regdb_source_dir }}"
     force: yes
+  tags: online
 
 - name: patch ``wireless-regdb`` sources
   patch:
