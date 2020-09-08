@@ -4,6 +4,7 @@
   package:
     name: firmware-atheros
   become: yes
+  tags: online
 
 - name: determine latest kernel version
   block:
@@ -56,6 +57,7 @@
       - needrestart
 
   become: yes
+  tags: online
 
 - name: check if we are running the latest kernel installed
   register: needrestart_result
