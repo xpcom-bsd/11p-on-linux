@@ -4,4 +4,4 @@
 
 # G5-CCH / 5 900 MHz / CH 180 allows 33 dBm
 wireless_ocb_frequency: 5900
-wireless_ocb_width: 20
+wireless_ocb_width: 10
