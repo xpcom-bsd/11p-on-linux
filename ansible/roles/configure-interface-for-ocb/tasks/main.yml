@@ -15,7 +15,7 @@
       changed_when: false
       failed_when: "
         'type outside context of a BSS' not in iw_dev_result.stdout"
-      tags: [verify]
+      tags: verify
 
     - name: leave any OCB channel
       command: "iw dev {{ wireless_interface }} ocb leave"
@@ -33,6 +33,6 @@
       failed_when: "
         '(' ~ wireless_ocb_frequency ~ ' MHz), width: ' ~ wireless_ocb_width ~ ' MHz,'
         not in iw_dev_result.stdout"
-      tags: [verify]
+      tags: verify
 
   become: yes

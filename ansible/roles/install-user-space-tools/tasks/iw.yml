@@ -15,6 +15,7 @@
       Since Debian 10 and later provide the aforementioned version,
       this Playbook does currently not implement the installation
       of a "custom" (i.e., outside apt) updated version of ``iw``.
+  tags: verify
 
 - name: install ``iw``
   apt:
@@ -26,7 +27,7 @@
   command: /sbin/iw
   changed_when: false
   failed_when: "'ocb join' not in iw_result.stdout"
-  tags: [verify]
+  tags: verify
 
 - name: verify the wireless device now supports
         "{{ wireless_ocb_frequency }}" MHz
@@ -36,4 +37,4 @@
   failed_when: "'* ' ~ wireless_ocb_frequency ~ ' MHz ['
                 not in iw_phy_result.stdout"
   become: yes
-  tags: [verify]
+  tags: verify
