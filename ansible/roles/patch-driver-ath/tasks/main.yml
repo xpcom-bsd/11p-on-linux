@@ -10,7 +10,10 @@
 
     - name: query kernel version from apt
       register: apt_show_linux_result
-      shell: apt show linux-image-amd64 | grep Version | cut -d' ' -f2
+      shell: >-
+        apt show linux-image-$(uname -r)
+        | grep Version
+        | cut -d' ' -f2
       changed_when: false
 
     - name: set kernel version to use
