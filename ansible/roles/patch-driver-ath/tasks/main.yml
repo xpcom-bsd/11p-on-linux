@@ -6,30 +6,30 @@
   become: yes
   tags: online
 
-- name: determine latest kernel version
+- name: determine kernel packages suffix
+  set_fact:
+    # e.g., "-rt-amd64"
+    kernel_packages_variant: >-
+      {{ ansible_kernel | regex_replace('[-.0-9]+-', '') }}
+
+- name: determine kernel package version
   block:
 
-    - name: query kernel version from apt
+    - name: query kernel package version from apt
       register: apt_show_linux_result
       shell: >-
-        apt show linux-image-$(uname -r)
+        dpkg -s linux-image-{{ ansible_kernel }}
         | grep Version
         | cut -d' ' -f2
       changed_when: false
 
     - name: set kernel version to use
       set_fact:
+        # e.g., "5.10.13-1"
         kernel_package_version: "{{ apt_show_linux_result.stdout_lines.0 }}"
-
-  when: not kernel_package_version
 
 - name: extract kernel upstream version Debian package version
   set_fact:
-    # e.g., extract "4.18" from "4.18+99"
-    # not quite elegant, improvements welcome:
-    kernel_upstream_version: "{{
-      kernel_package_version.split('+', 1).0.split('~', 1).0
-    }}"
     # e.g., extract "4.18" from "4.18.3.2"
     kernel_major_minor_version: "{{
       kernel_package_version.split('.').0
@@ -38,15 +38,17 @@
     }}"
 
 - name: print kernel versions we plan to use
-  debug: msg="will try to use the detected latest available kernel
-              package version {{ kernel_package_version }}
-              (upstream version {{ kernel_upstream_version }})"
+  debug:
+    msg: >-
+      detected kernel
+      package version {{ kernel_package_version }}
+      variant {{ kernel_packages_variant }}"
 
 - name: install required apt packages to compile kernel modules
   apt:
     name:
-      - "linux-image-{{ kernel_arch }}={{ kernel_package_version }}"
-      - "linux-headers-{{ kernel_arch }}={{ kernel_package_version }}"
+      - "linux-image-{{ kernel_packages_variant }}={{ kernel_package_version }}"
+      - "linux-headers-{{ kernel_packages_variant }}={{ kernel_package_version }}"
       - "linux-source={{ kernel_package_version }}"
 
       # https://wiki.debian.org/BuildADebianKernelPackage

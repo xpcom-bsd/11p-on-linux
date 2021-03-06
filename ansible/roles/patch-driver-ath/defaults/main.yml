@@ -1,9 +1,3 @@
-# set this variable if you want to use a specific kernel version
-# must be available via apt as
-# ``linux-image-amd64={{ kernel_package_version }}``
-kernel_package_version:
-kernel_arch: amd64
-
 linux_source_dir: "~{{
   ansible_env.SUDO_USER|default(ansible_user_id)
 }}/src-for-11p/linux"
