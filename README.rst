@@ -222,7 +222,7 @@ compilation:
 .. code-block:: shell
 
   sudo apt install linux-headers-{ arch } linux-source build-essential \
-    kernel-package libssl-dev
+    libssl-dev
 
 After installation the Linux sources can be found in
 ``/usr/src/linux-source-{ version }.tar.xz``.
