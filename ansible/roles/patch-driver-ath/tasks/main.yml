@@ -125,6 +125,7 @@
   become: yes
 
 - name: load kernel modules
+  register: load_result
   command: "insmod {{ linux_source_dir }}/{{ item }}"
   with_items: "{{ wireless_modules }}"
   become: yes
