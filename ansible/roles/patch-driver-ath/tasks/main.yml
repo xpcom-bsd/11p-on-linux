@@ -1,10 +1,19 @@
-# not strictly required for patching, but let's make sure we can
-# actually use the device then ;)
-- name: "install required firmwares (May 2020: for ath10k devices)"
+- name: get driver of wireless interface
+  register: wireless_device
+  shell: |
+    cd /sys/class/net/{{ wireless_modules }}/device
+    export d=$(cat vendor):$(cat device); lspci -d $d || lsusb -d $d
+  changed_when: false
+
+- name: install required firmwares
   package:
     name: firmware-atheros
   become: yes
   tags: online
+  when: >-
+    'QCA' in wireless_device.stdout or
+    'AR7010' in wireless_device.stdout or
+    'AR9271' in wireless_device.stdout
 
 - name: determine kernel packages suffix
   set_fact:
