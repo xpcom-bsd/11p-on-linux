@@ -1,4 +1,4 @@
-- name: get driver of wireless interface
+- name: get friendly name of wireless device
   register: wireless_device
   shell: |
     cd /sys/class/net/{{ wireless_modules }}/device
