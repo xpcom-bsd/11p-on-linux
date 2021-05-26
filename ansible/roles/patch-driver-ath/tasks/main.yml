@@ -27,7 +27,7 @@
     - name: query kernel package version from apt
       register: apt_show_linux_result
       shell: >-
-        dpkg -s linux-image-{{ ansible_kernel }}
+        dpkg -s linux-image-{{ kernel_packages_variant }}
         | grep Version
         | cut -d' ' -f2
       changed_when: false
@@ -41,17 +41,17 @@
   set_fact:
     # e.g., extract "4.18" from "4.18.3.2"
     kernel_major_minor_version: "{{
-      kernel_package_version.split('.').0
+      kernel_package_version.split('+').0.split('.').0
       }}.{{
-      kernel_package_version.split('.').1
+      kernel_package_version.split('+').0.split('.').1
     }}"
 
-- name: print kernel versions we plan to use
+- name: assert kernel version to use could be identified
   debug:
     msg: >-
       detected kernel
       package version {{ kernel_package_version }}
-      variant {{ kernel_packages_variant }}"
+      variant {{ kernel_packages_variant }}
 
 - name: install required apt packages to compile kernel modules
   apt:
