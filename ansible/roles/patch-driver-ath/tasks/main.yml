@@ -98,10 +98,34 @@
     extra_opts:  --strip-components=1
     creates: "{{ linux_source_dir }}/Makefile"
 
+- name: determine kernel patch to use (closest but lower version)
+  set_fact:
+    kernel_patch_file: "{{ item }}"
+  when: >-
+    item
+    | regex_replace('^.*/linux-([^/]*)\\.patch$', '\\1')
+    is version(kernel_major_minor_version, '<=')
+  with_items: >-
+    {{ lookup('fileglob', local_patches_dir ~ '/linux-*.patch',
+              wantlist=True)
+       | sort }}
+  loop_control:
+    label: "{{ item | relpath(playbook_dir) }}"
+
+- name: ensure a kernel patch to use could be determined
+  assert:
+    that: kernel_patch_file is defined
+    fail_msg: >-
+      Could not determine kernel patch to use.
+      Check running kernel on the remotes vs. available patch files in
+      {{ local_patches_dir }}.
+    success_msg: >-
+      will use patch file {{ kernel_patch_file | relpath(playbook_dir) }}
+
 - name: patch kernel sources
   patch:
     basedir: "{{ linux_source_dir }}"
-    src: ../../../patches/linux.patch
+    src: "{{ kernel_patch_file }}"
 
 - name: compile kernel modules
   make:

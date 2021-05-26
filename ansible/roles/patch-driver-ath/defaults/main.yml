@@ -10,3 +10,5 @@ wireless_modules:
   - "drivers/net/wireless/ath/ath9k/ath9k_common.ko"
   - "drivers/net/wireless/ath/ath9k/ath9k_htc.ko"
   - "drivers/net/wireless/ath/ath9k/ath9k.ko"
+
+local_patches_dir: ../../../patches
