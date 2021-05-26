@@ -148,6 +148,7 @@
     - ath10k_usb
     - ath10k_core
     - "{{ wireless_modules[::-1] }}"
+  tags: configure
   become: yes
 
 - name: count physical wireless devices
@@ -155,12 +156,14 @@
   shell: iw dev | grep -c '^phy'
   changed_when: false
   failed_when: iw_phy_count_result_pre.rc not in [0, 1]
+  tags: configure
   become: yes
 
 - name: load kernel modules
   register: load_result
   command: "insmod {{ linux_source_dir }}/{{ item }}"
   with_items: "{{ wireless_modules }}"
+  tags: configure
   become: yes
 
 - name: wait until new physical wireless devices have been detected
@@ -172,8 +175,10 @@
     iw_phy_count_result_pre.stdout != iw_phy_count_result_post.stdout
   delay: 1
   retries: 10
+  tags: configure
   become: yes
 
 - name: re-gather facts
   setup:
   when: unload_result.changed or load_result.changed
+  tags: configure

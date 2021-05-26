@@ -1,6 +1,7 @@
 - include_tasks: ../../_include/tasks/detect_wireless_interface.yml
 
-- name: as privileged user
+- become: yes
+  tags: configure
   block:
 
     - name: set regulatory domain
@@ -15,5 +16,3 @@
       register: set_txpower_result
       command: >
         iw dev {{ wireless_interface }} set txpower fixed 100000000
-
-  become: yes
