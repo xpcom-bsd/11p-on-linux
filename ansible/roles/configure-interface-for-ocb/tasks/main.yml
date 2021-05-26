@@ -1,6 +1,8 @@
 - include_tasks: ../../_include/tasks/detect_wireless_interface.yml
+  tags: configure
 
-- name: as privileged user
+- become: yes
+  tags: configure
   block:
 
     - name: put interface down
@@ -46,5 +48,3 @@
         '(' ~ wireless_ocb_frequency ~ ' MHz), width: ' ~ wireless_ocb_width ~ ' MHz'
         not in iw_dev_result.stdout"
       tags: verify
-
-  become: yes
