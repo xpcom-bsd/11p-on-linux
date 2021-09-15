@@ -131,7 +131,7 @@ How to get things going:
 
 #. clone this repository, go there
 
-   * ``git clone git@gitlab.com:hpi-potsdam/osm/g5-on-linux/11p-on-linux.git``
+   * ``git clone https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux.git``
    * ``cd 11p-on-linux``
 
 #. install Ansible from the source of your preference
@@ -249,7 +249,7 @@ Check out this repository:
 .. code-block:: shell
 
   cd ~/my-workdir
-  git clone git@gitlab.com:hpi-potsdam/osm/g5-on-linux/11p-on-linux.git
+  git clone https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux.git
 
 Now apply the patches to Linux provided by this repository to the
 ``ath9k`` driver:
