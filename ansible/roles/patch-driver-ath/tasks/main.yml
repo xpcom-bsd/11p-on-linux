@@ -15,29 +15,41 @@
     'AR7010' in wireless_device.stdout or
     'AR9271' in wireless_device.stdout
 
-- name: determine kernel packages suffix
+
+
+- name: query kernel package in use
+  register: get_kernel_package_result
+  # e.g., "linux-image-5.14.0-2-amd64"
+  shell: >-
+    dpkg -S '{{
+      ansible_proc_cmdline.BOOT_IMAGE
+      | regex_replace('/@[^/]*', '')
+    }}'
+    | cut -d: -f1
+  changed_when: false
+
+- name: set kernel package in use
   set_fact:
-    # e.g., "-rt-amd64"
-    kernel_packages_variant: >-
-      {{ ansible_kernel | regex_replace('[-.0-9]+-', '') }}
+    kernel_package: >-
+      {{ get_kernel_package_result.stdout_lines.0 }}
 
-- name: determine kernel package version
-  block:
 
-    - name: query kernel package version from apt
-      register: apt_show_linux_result
-      shell: >-
-        dpkg -s linux-image-{{ kernel_packages_variant }}
-        | grep Version
-        | cut -d' ' -f2
-      changed_when: false
 
-    - name: set kernel version to use
-      set_fact:
-        # e.g., "5.10.13-1"
-        kernel_package_version: "{{ apt_show_linux_result.stdout_lines.0 }}"
+- name: query kernel package version in use
+  register: dpkg_linux_version_result
+  shell: >-
+    dpkg -s {{ kernel_package }}
+    | grep Version
+    | cut -d' ' -f2
+  changed_when: false
 
-- name: extract kernel upstream version Debian package version
+- name: set kernel version to use
+  set_fact:
+    # e.g., "5.10.13-1"
+    kernel_package_version: >-
+      {{ dpkg_linux_version_result.stdout_lines.0 }}
+
+- name: extract kernel major and minor version
   set_fact:
     # e.g., extract "4.18" from "4.18.3.2"
     kernel_major_minor_version: "{{
@@ -46,19 +58,29 @@
       kernel_package_version.split('+').0.split('.').1
     }}"
 
+
+
 - name: assert kernel version to use could be identified
   debug:
     msg: >-
       detected kernel
-      package version {{ kernel_package_version }}
-      variant {{ kernel_packages_variant }}
+      package {{ kernel_package }},
+      version {{ kernel_package_version }},
+      upstream {{ kernel_major_minor_version}}
+
+
 
 - name: install required apt packages to compile kernel modules
   apt:
     name:
-      - "linux-image-{{ kernel_packages_variant }}={{ kernel_package_version }}"
-      - "linux-headers-{{ kernel_packages_variant }}={{ kernel_package_version }}"
-      - "linux-source={{ kernel_package_version }}"
+      - "{{ kernel_package
+            | regex_replace('-dbg$', '')
+            | regex_replace('-unsigned$', '')
+            | regex_replace('-image-', '-headers-')
+        }}"
+      - "linux-source-{{ kernel_major_minor_version }}{{
+          '.0' if ansible_distribution == 'Ubuntu' else ''
+        }}"
 
       # https://wiki.debian.org/BuildADebianKernelPackage
       - build-essential
