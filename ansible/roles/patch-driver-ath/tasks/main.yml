@@ -115,7 +115,12 @@
 - name: extract kernel sources
   unarchive:
     remote_src: yes
-    src: "/usr/src/linux-source-{{ kernel_major_minor_version }}.tar.xz"
+    src: >-
+      /usr/src/linux-source-{{
+        kernel_major_minor_version
+      }}{{
+        '.0' if ansible_distribution == 'Ubuntu' else ''
+      }}.tar.xz
     dest: "{{ linux_source_dir }}"
     extra_opts:  --strip-components=1
     creates: "{{ linux_source_dir }}/Makefile"
