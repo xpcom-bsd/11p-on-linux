@@ -1,3 +1,10 @@
+- name: install required packages to get friendly name of devices
+  package:
+    name:
+      - pciutils
+      - usbutils
+  tags: online
+
 - name: get friendly name of wireless device
   register: wireless_device
   shell: |
@@ -22,7 +29,7 @@
   # e.g., "linux-image-5.14.0-2-amd64"
   shell: >-
     dpkg -S '{{
-      ansible_proc_cmdline.BOOT_IMAGE
+      (ansible_proc_cmdline | default(ansible_cmdline)).BOOT_IMAGE
       | regex_replace('/@[^/]*', '')
     }}'
     | cut -d: -f1
@@ -35,7 +42,7 @@
 
 
 
-- name: query kernel package version in use
+- name: query kernel package version
   register: dpkg_linux_version_result
   shell: >-
     dpkg -s {{ kernel_package }}

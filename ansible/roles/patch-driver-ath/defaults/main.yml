@@ -1,3 +1,6 @@
+# if you want to select a specific kernel package (not recommended)
+#kernel_package: …
+
 linux_source_dir: "~{{
   ansible_env.SUDO_USER|default(ansible_user_id)
 }}/src-for-11p/linux"
