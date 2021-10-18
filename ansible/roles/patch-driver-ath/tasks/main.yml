@@ -186,6 +186,12 @@
   tags: configure
   become: yes
 
+- name: load kernel module dependencies
+  modprobe:
+    name: mac80211
+  tags: configure
+  become: yes
+
 - name: load kernel modules
   register: load_result
   command: "insmod {{ linux_source_dir }}/{{ item }}"
