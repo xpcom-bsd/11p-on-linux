@@ -22,6 +22,19 @@ has been published in the Proceedings of the 52nd
 `Hawaii International Conference on System Sciences <https://hicss.hawaii.edu/>`__
 2019.
 
+.. code-block:: bibtex
+
+  @inproceedings{richterPerformanceRealTimeWirelessCommunication2019,
+    title = {Performance of {{Real}}-{{Time Wireless Communication}} for {{Railway Environments}} with {{IEEE}} 802.11p},
+    booktitle = {Proceedings of the 52nd {{Hawaii International Conference}} on {{System Sciences}} ({{HICSS}})},
+    author = {Richter, Daniel and Pirl, Lukas and Beilharz, Jossekin and Werling, Christian and Polze, Andreas},
+    date = {2019-01-08},
+    doi = {10.24251/HICSS.2019.907},
+    url = {http://scholarspace.manoa.hawaii.edu/handle/10125/60190},
+    abstract = {IEEE 802.11p complements the widespread 802.11 standard for use in vehicular environments. Designed for communication between wireless devices in rapidly changing environments, it handles situations where connection and communication must be completed in very short periods of time. Even though this is supposed to be a substantial improvement and essential for real-time applications, latencies have been rarely investigated in existing studies. Based on practical experiments, we evaluate how beneficial 802.11p’s changes in comparison to regular 802.11n are and whether the usage of IEEE 802.11p is suitable within environments with real-time constraints. We compare latencies of networks in OCB mode to both networks in IBSS (ad-hoc) and BSS/AP (access point) mode by measuring the initial connection speed and the latency of ICMP packets’ round-trip times. Furthermore, the response of the latter to disturbances is measured. The results show OCB to be superior to both BSS/AP and IBSS modes in average latency, maximum latency, and standard deviation under all tested circumstances.},
+    isbn = {978-0-9981331-2-6},
+  }
+
 PRs welcome.
 
 Contents
@@ -130,7 +143,7 @@ How to get things going:
 
 #. clone this repository, go there
 
-   * ``git clone git@gitlab.com:hpi-potsdam/osm/g5-on-linux/11p-on-linux.git``
+   * ``git clone https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux.git``
    * ``cd 11p-on-linux``
 
 #. install Ansible from the source of your preference
@@ -248,7 +261,7 @@ Check out this repository:
 .. code-block:: shell
 
   cd ~/my-workdir
-  git clone git@gitlab.com:hpi-potsdam/osm/g5-on-linux/11p-on-linux.git
+  git clone https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux.git
 
 Now apply the patches to Linux provided by this repository to the
 ``ath9k`` driver:
