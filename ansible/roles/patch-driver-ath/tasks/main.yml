@@ -205,7 +205,7 @@
   tags: configure
   become: yes
 
-- name: wait until new wireless devices have been detected
+- name: wait until a new wireless devices has been detected
   register: find_net_wireless_post_result
   shell: find -H /sys/class/net/* -name wireless
   changed_when: false
