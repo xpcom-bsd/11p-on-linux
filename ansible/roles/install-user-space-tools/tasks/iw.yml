@@ -30,8 +30,8 @@
   failed_when: "'ocb join' not in iw_result.stdout"
   tags: verify
 
-- name: verify the wireless device now supports
-        "{{ wireless_ocb_frequency }}" MHz
+- name: "verify the wireless device now supports
+        {{ wireless_ocb_frequency }} MHz"
   register: iw_phy_result
   command: iw phy
   changed_when: false
