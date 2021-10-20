@@ -210,12 +210,12 @@
   register: iw_phy_count_result_post
   shell: iw dev | grep -c '^phy'
   changed_when: false
-  failed_when: iw_phy_count_result_post.rc not in [0, 1]
+  failed_when: iw_phy_count_result_post.rc != 0
   until: >
     iw_phy_count_result_post.stdout_lines.0 | int >
     iw_phy_count_result_pre.stdout_lines.0 | int
   delay: 1
-  retries: 30
+  retries: 10
   tags: configure
   become: yes
 
