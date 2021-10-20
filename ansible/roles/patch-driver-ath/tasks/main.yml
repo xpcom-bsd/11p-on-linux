@@ -185,11 +185,10 @@
   tags: configure
   become: yes
 
-- name: count physical wireless devices
-  register: iw_phy_count_result_pre
-  shell: iw dev | grep -c '^phy'
+- name: list wireless devices
+  register: find_net_wireless_pre_result
+  shell: find -H /sys/class/net/* -name wireless
   changed_when: false
-  failed_when: iw_phy_count_result_pre.rc not in [0, 1]
   tags: configure
   become: yes
 
@@ -206,14 +205,14 @@
   tags: configure
   become: yes
 
-- name: wait until new physical wireless devices have been detected
-  register: iw_phy_count_result_post
-  shell: iw dev | grep -c '^phy'
+- name: wait until new wireless devices have been detected
+  register: find_net_wireless_post_result
+  shell: find -H /sys/class/net/* -name wireless
   changed_when: false
-  failed_when: iw_phy_count_result_post.rc != 0
   until: >
-    iw_phy_count_result_post.stdout_lines.0 | int >
-    iw_phy_count_result_pre.stdout_lines.0 | int
+    find_net_wireless_post_result.stdout_lines | count
+    >
+    find_net_wireless_pre_result.stdout_lines | count
   delay: 1
   retries: 10
   tags: configure
