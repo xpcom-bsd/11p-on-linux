@@ -5,6 +5,7 @@
   tags: configure
   block:
 
+
     - name: put interface up
       command: "ip link set {{ wireless_interface }} up"
 
@@ -16,6 +17,7 @@
         - "{{ 'XX' if wireless_regulatory_domain == '00'
                    else '00' }}"
         - "{{ wireless_regulatory_domain }}"
+
 
     - name: activate OCB mode
       command: "iw dev {{ wireless_interface }} set type ocb"
@@ -30,6 +32,18 @@
 
     - name: leave any OCB channel
       command: "iw dev {{ wireless_interface }} ocb leave"
+
+
+    - name: "verify the wireless device supports
+            {{ wireless_ocb_frequency }} MHz"
+      register: iw_phy_result
+      command: iw phy
+      changed_when: false
+      failed_when: >-
+        '* ' ~ wireless_ocb_frequency ~ ' MHz ['
+        not in iw_phy_result.stdout
+      become: yes
+      tags: verify
 
     - name: "put interface in 802.11p band
              ({{ wireless_ocb_frequency }}@{{ wireless_ocb_width }} MHz)"
