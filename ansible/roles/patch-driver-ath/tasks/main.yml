@@ -212,9 +212,10 @@
   changed_when: false
   failed_when: iw_phy_count_result_post.rc not in [0, 1]
   until: >
-    iw_phy_count_result_pre.stdout != iw_phy_count_result_post.stdout
+    iw_phy_count_result_post.stdout_lines.0 | int >
+    iw_phy_count_result_pre.stdout_lines.0 | int
   delay: 1
-  retries: 10
+  retries: 30
   tags: configure
   become: yes
 
