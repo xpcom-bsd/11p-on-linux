@@ -1,7 +1,6 @@
-.. image:: https://rail2x.berlin/img/logo.svg
-  :width: 100em
+.. image:: https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux/badges/master/pipeline.svg
   :align: right
-  :target: https://rail2x.berlin/
+  :target: https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux/-/commits/master
 
 ==============
 |11p| on Linux
