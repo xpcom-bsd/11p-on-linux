@@ -5,7 +5,15 @@ default:
     - ansible --version
     - ansible localhost -m setup
     - cd ansible
-    - echo localhost ansible_connection=local > inventory
+
+    # setting ``ansible_python_interpreter`` is a temporary fix,
+    # since it is apparently detected wrongly on Buster in combination
+    # with ``connection=local``:
+    # https://gitlab.com/hpi-potsdam/osm/g5-on-linux/11p-on-linux/-/jobs/1698419117
+    - echo localhost ansible_connection=local
+                     ansible_python_interpreter=/usr/bin/python3
+      > inventory
+
     - ansible-playbook $CI_ANSIBLE_PLAYBOOK_EXTRA_ARGS example-playbook.yml
 
 example Playbook on Buster:
