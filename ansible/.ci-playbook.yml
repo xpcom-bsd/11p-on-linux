@@ -1,7 +1,0 @@
-- hosts: localhost
-  roles:
-    - patch-driver-ath
-    - install-user-space-tools
-    - configure-interface-for-ocb
-    - configure-interface-ip
-    - configure-interface-max-power

@@ -2,23 +2,19 @@ default:
   before_script:
     - apt update
     - apt install -y ansible
-    - ansible --version > ansible-version.txt
-    - ansible localhost -m setup > facts.txt
+    - ansible --version
+    - ansible localhost -m setup
     - cd ansible
-      && ansible-playbook $CI_ANSIBLE_PLAYBOOK_EXTRA_ARGS .ci-playbook.yml
+    - echo localhost ansible_connection=local > inventory
+    - ansible-playbook $CI_ANSIBLE_PLAYBOOK_EXTRA_ARGS example-playbook.yml
 
-  artifacts:
-    untracked: true
-    when: always
-    expire_in: 3 months
-
-patch on buster:
+example Playbook on Buster:
   script: echo script cannot be blank :\)
   tags:
     - kvm
     - buster
 
-patch on bullseye:
+example Playbook on Bullseye:
   script: echo script cannot be blank :\)
   tags:
     - kvm
