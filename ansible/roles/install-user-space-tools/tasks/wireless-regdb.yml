@@ -4,6 +4,7 @@
 - name: install dependencies of ``wireless-regdb``
   apt:
     name:
+      - git
       # required by ``wireless-regdb``'s helper script ``db2fw.py``:
       # (we use Python 3 so this works on new OSs, where Python 2 is
       # deprecated, as well)
