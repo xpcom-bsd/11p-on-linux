@@ -127,7 +127,13 @@
         kernel_major_minor_version
       }}{{
         '.0' if ansible_distribution == 'Ubuntu' else ''
-      }}.tar.xz
+      }}.tar.{{
+        'bz2' if ansible_distribution == 'Ubuntu' else 'xz'
+      }}
+    # if the line above turns out to need even more conditionals, we
+    # should probably query the correct file name via ``dpkg-query -L
+    # linux-source-… | grep '\.tar\.'`` or so
+
     dest: "{{ linux_source_dir }}"
     extra_opts:  --strip-components=1
     creates: "{{ linux_source_dir }}/Makefile"
