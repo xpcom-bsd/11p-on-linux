@@ -27,3 +27,9 @@ example Playbook on Bullseye:
   tags:
     - kvm
     - bullseye
+
+example Playbook on Focal:
+  script: echo script cannot be blank :\)
+  tags:
+    - kvm
+    - focal
